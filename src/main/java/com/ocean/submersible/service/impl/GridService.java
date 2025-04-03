@@ -19,7 +19,11 @@ public class GridService implements IGridService {
 
     @Override
     public Grid createGrid(int width, int height) {
-        return null;
+        Grid grid = Grid.builder()
+                .height(height)
+                .width(width)
+                .build();
+        return gridRepository.save(grid);
     }
 
     @Override
@@ -30,7 +34,7 @@ public class GridService implements IGridService {
 
     @Override
     public List<Obstacle> getObstacles(Long gridId) {
-       return null;
+        return null;
     }
 
     @Override
