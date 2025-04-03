@@ -99,4 +99,12 @@ public class ProbeServiceTest {
         assertEquals(1, probe.getY());
         verify(probeRepository, times(1)).save(probe);
     }
+
+    @Test
+    void testMoveForward_OutOfGridBounds() {
+        mockProbe.setX(6);
+        mockProbe.setY(6);
+        when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
+        assertThrows(RuntimeException.class, () -> probeService.moveForward(mockProbe.getId()));
+    }
 }
