@@ -128,7 +128,22 @@ public class ProbeService implements IProbeService {
 
     @Override
     public Probe turnRight(Long probeId) {
-        return null;
+        Probe probe = getProbe(probeId);
+        switch (probe.getFacingDirection()) {
+            case NORTH:
+                probe.setFacingDirection(Direction.EAST);
+                break;
+            case EAST:
+                probe.setFacingDirection(Direction.SOUTH);
+                break;
+            case SOUTH:
+                probe.setFacingDirection(Direction.WEST);
+                break;
+            case WEST:
+                probe.setFacingDirection(Direction.NORTH);
+                break;
+        }
+        return probeRepository.save(probe);
     }
 
     private boolean isValidMovement(Grid grid, int x, int y) {
