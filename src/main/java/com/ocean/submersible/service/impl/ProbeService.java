@@ -33,7 +33,8 @@ public class ProbeService implements IProbeService {
 
     @Override
     public Probe getProbe(Long probeId) {
-        return null;
+        return probeRepository.findById(probeId)
+                .orElseThrow(() -> new RuntimeException("Probe not found"));
     }
 
     @Override
