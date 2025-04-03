@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,5 +47,15 @@ public class GridServiceTest {
         assertNotNull(createdGrid);
         assertEquals(10, createdGrid.getWidth());
         assertEquals(10, createdGrid.getHeight());
+    }
+
+    @Test
+    void testAddObstacle() {
+        when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
+        when(obstacleRepository.save(any(Obstacle.class))).thenReturn(mockObstacle);
+        Obstacle createdObstacle = gridService.addObstacle(1L, 3, 4);
+        assertNotNull(createdObstacle);
+        assertEquals(3, createdObstacle.getX());
+        assertEquals(4, createdObstacle.getY());
     }
 }
