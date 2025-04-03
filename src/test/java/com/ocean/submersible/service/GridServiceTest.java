@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -36,8 +37,17 @@ public class GridServiceTest {
 
     @BeforeEach
     void setUp() {
-        mockGrid = Grid.builder().id(1L).width(10).height(10).build();
-        mockObstacle = Obstacle.builder().id(1L).x(3).y(4).grid(mockGrid).build();
+        mockGrid = Grid.builder()
+                .id(1L)
+                .width(10)
+                .height(10)
+                .build();
+        mockObstacle = Obstacle.builder()
+                .id(1L)
+                .x(3)
+                .y(4)
+                .grid(mockGrid)
+                .build();
     }
 
     @Test
@@ -57,5 +67,20 @@ public class GridServiceTest {
         assertNotNull(createdObstacle);
         assertEquals(3, createdObstacle.getX());
         assertEquals(4, createdObstacle.getY());
+    }
+
+    @Test
+    void testAddObstacleOutsideGrid() {
+        when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
+        Obstacle obstacle = Obstacle.builder()
+                .id(1L)
+                .x(11)
+                .y(4)
+                .grid(mockGrid)
+                .build();
+        when(obstacleRepository.save(any(Obstacle.class))).thenReturn(obstacle);
+        assertThrows(RuntimeException.class, () ->
+                gridService.addObstacle(1L, 11, 4)
+        );
     }
 }
