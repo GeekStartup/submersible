@@ -108,7 +108,22 @@ public class ProbeService implements IProbeService {
 
     @Override
     public Probe turnLeft(Long probeId) {
-        return null;
+        Probe probe = getProbe(probeId);
+        switch (probe.getFacingDirection()) {
+            case NORTH:
+                probe.setFacingDirection(Direction.WEST);
+                break;
+            case EAST:
+                probe.setFacingDirection(Direction.NORTH);
+                break;
+            case SOUTH:
+                probe.setFacingDirection(Direction.EAST);
+                break;
+            case WEST:
+                probe.setFacingDirection(Direction.SOUTH);
+                break;
+        }
+        return probeRepository.save(probe);
     }
 
     @Override
