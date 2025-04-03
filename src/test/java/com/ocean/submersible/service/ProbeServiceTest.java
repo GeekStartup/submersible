@@ -108,7 +108,7 @@ public class ProbeServiceTest {
         Probe probe = probeService.moveForward(mockProbe.getId());
         assertEquals(0, probe.getX());
         assertEquals(1, probe.getY());
-        assertEquals(1,probe.getVisitedCoordinates().size());
+        assertEquals(1, probe.getVisitedCoordinates().size());
         verify(probeRepository, times(1)).save(probe);
     }
 
@@ -157,6 +157,16 @@ public class ProbeServiceTest {
 
         Probe probe = probeService.turnLeft(mockProbe.getId());
         assertEquals(Direction.WEST, probe.getFacingDirection());
+        verify(probeRepository, times(1)).save(probe);
+    }
+
+    @Test
+    void testTurnRight_Success() {
+        when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
+        when(probeRepository.save(any(Probe.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Probe probe = probeService.turnRight(mockProbe.getId());
+
+        assertEquals(Direction.EAST, probe.getFacingDirection());
         verify(probeRepository, times(1)).save(probe);
     }
 
