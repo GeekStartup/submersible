@@ -62,8 +62,13 @@ public class ProbeService implements IProbeService {
             throw new RuntimeException("Movement is not within grid boundaries");
         }
 
+        if (isObstaclePresent(probe.getGrid(), newX, newY)) {
+            throw new RuntimeException("Movement not possible due to obstacles");
+        }
+
         probe.setX(newX);
         probe.setY(newY);
+        addVisitedCoordinate(probe);
         return probeRepository.save(probe);
     }
 
@@ -92,6 +97,15 @@ public class ProbeService implements IProbeService {
         int minY = -maxY;
 
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
+
+    private boolean isObstaclePresent(Grid grid, int x, int y) {
+        return grid.getObstacles().stream()
+                .anyMatch(obstacle -> obstacle.getX() == x && obstacle.getY() == y);
+    }
+
+    private void addVisitedCoordinate(Probe probe) {
+        probe.getVisitedCoordinates().add(probe.getX() + "," + probe.getY());
     }
 
 
