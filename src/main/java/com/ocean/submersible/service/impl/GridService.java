@@ -28,8 +28,7 @@ public class GridService implements IGridService {
 
     @Override
     public Obstacle addObstacle(Long gridId, int x, int y) {
-        Grid grid = gridRepository.findById(gridId)
-                .orElseThrow(() -> new RuntimeException("Grid not found"));
+        Grid grid = getGrid(gridId);
 
         boolean validObstacle = isValidObstacle(grid, x, y);
         if (!validObstacle) {
@@ -47,8 +46,7 @@ public class GridService implements IGridService {
 
     @Override
     public List<Obstacle> getObstacles(Long gridId) {
-        Grid grid = gridRepository.findById(gridId)
-                .orElseThrow(() -> new RuntimeException("Grid not found"));
+        Grid grid = getGrid(gridId);
         return grid.getObstacles();
     }
 
