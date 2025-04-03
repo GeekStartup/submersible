@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,4 +78,12 @@ public class GridServiceTest {
         );
         assertEquals("Obstacle not within grid boundaries", runtimeException.getMessage());
     }
+
+    @Test
+    void testGetObstacles() {
+        when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
+        mockGrid.setObstacles(Collections.singletonList(mockObstacle));
+        assertEquals(1, gridService.getObstacles(1L).size());
+    }
 }
+
