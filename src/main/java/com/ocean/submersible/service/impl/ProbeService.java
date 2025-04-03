@@ -39,7 +39,27 @@ public class ProbeService implements IProbeService {
 
     @Override
     public Probe moveForward(Long probeId) {
-        return null;
+        Probe probe = getProbe(probeId);
+        int newX = probe.getX();
+        int newY = probe.getY();
+
+        switch (probe.getFacingDirection()) {
+            case NORTH:
+                newY++;
+                break;
+            case EAST:
+                newX++;
+                break;
+            case SOUTH:
+                newY--;
+                break;
+            case WEST:
+                newX--;
+                break;
+        }
+        probe.setX(newX);
+        probe.setY(newY);
+        return probeRepository.save(probe);
     }
 
     @Override
