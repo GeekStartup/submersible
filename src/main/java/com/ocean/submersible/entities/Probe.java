@@ -1,5 +1,6 @@
 package com.ocean.submersible.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ocean.submersible.enums.Direction;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -37,6 +38,7 @@ public class Probe {
     private Direction facingDirection;
 
     @OneToOne(mappedBy = "probe")
+    @JsonBackReference
     private Grid grid;
 
     @ElementCollection

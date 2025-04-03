@@ -1,5 +1,6 @@
 package com.ocean.submersible.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,10 +29,12 @@ public class Grid {
     private int width;
     private int height;
 
-    @OneToMany(mappedBy = "grid", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grid", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Obstacle> obstacles;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "probe_id", referencedColumnName = "id")
+    @JsonManagedReference
     private Probe probe;
 }

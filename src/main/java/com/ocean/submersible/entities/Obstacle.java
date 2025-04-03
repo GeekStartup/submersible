@@ -1,5 +1,6 @@
 package com.ocean.submersible.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,5 +31,6 @@ public class Obstacle {
 
     @ManyToOne
     @JoinColumn(name = "grid_id", nullable = false)
+    @JsonBackReference
     private Grid grid;
 }
