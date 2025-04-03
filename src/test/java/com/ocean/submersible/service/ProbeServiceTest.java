@@ -91,10 +91,7 @@ public class ProbeServiceTest {
     void testMoveForward_Success() {
         when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
         when(probeRepository.save(any(Probe.class))).thenAnswer(invocation -> {
-            Probe probeToSave = invocation.getArgument(0);
-            probeToSave.setX(0);
-            probeToSave.setY(1);
-            return probeToSave;
+            return invocation.getArgument(0);
         });
 
         Probe probe = probeService.moveForward(mockProbe.getId());
