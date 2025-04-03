@@ -1,5 +1,6 @@
 package com.ocean.submersible.service.impl;
 
+import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Probe;
 import com.ocean.submersible.enums.Direction;
 import com.ocean.submersible.repositories.GridRepository;
@@ -18,7 +19,16 @@ public class ProbeService implements IProbeService {
 
     @Override
     public Probe createProbe(Long gridId, int x, int y, Direction facingDirection) {
-        return null;
+        Grid grid = gridRepository.findById(gridId)
+                .orElseThrow(() -> new RuntimeException("Grid not found"));
+        Probe probe = Probe.builder()
+                .x(x)
+                .y(y)
+                .facingDirection(facingDirection)
+                .grid(grid)
+                .build();
+        grid.setProbe(probe);
+        return probeRepository.save(probe);
     }
 
     @Override
