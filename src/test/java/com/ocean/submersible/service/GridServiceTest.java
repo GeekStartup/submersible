@@ -97,7 +97,15 @@ public class GridServiceTest {
         assertEquals(10, grid.getWidth());
         assertEquals(10, grid.getHeight());
         verify(gridRepository).findById(1L);
-        verify(gridRepository,times(1)).findById(1L);
+        verify(gridRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetGrid_GridNotFound() {
+        when(gridRepository.findById(any())).thenReturn(Optional.empty());
+        RuntimeException thrown = assertThrows(RuntimeException.class, () ->
+                gridService.getGrid(1L));
+        assertEquals("Grid not found", thrown.getMessage());
     }
 }
 
