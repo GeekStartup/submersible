@@ -1,6 +1,7 @@
 package com.ocean.submersible.service;
 
 import com.ocean.submersible.entities.Grid;
+import com.ocean.submersible.entities.Obstacle;
 import com.ocean.submersible.entities.Probe;
 import com.ocean.submersible.repositories.GridRepository;
 import com.ocean.submersible.repositories.ProbeRepository;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.ocean.submersible.enums.Direction.NORTH;
@@ -104,6 +106,18 @@ public class ProbeServiceTest {
     void testMoveForward_OutOfGridBounds() {
         mockProbe.setX(6);
         mockProbe.setY(6);
+        when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
+        assertThrows(RuntimeException.class, () -> probeService.moveForward(mockProbe.getId()));
+    }
+
+    @Test
+    void testMoveForward_ObstacleInTheWay() {
+        Obstacle obstacle = Obstacle.builder()
+                .x(0)
+                .y(1)
+                .grid(mockGrid)
+                .build();
+        mockGrid.setObstacles(Collections.singletonList(obstacle));
         when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
         assertThrows(RuntimeException.class, () -> probeService.moveForward(mockProbe.getId()));
     }
