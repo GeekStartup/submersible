@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -53,6 +54,7 @@ public class ProbeServiceTest {
                 .y(0)
                 .facingDirection(NORTH)
                 .grid(mockGrid)
+                .visitedCoordinates(new ArrayList<>())
                 .build();
     }
 
@@ -91,6 +93,12 @@ public class ProbeServiceTest {
 
     @Test
     void testMoveForward_Success() {
+        Obstacle obstacle = Obstacle.builder()
+                .x(0)
+                .y(2)
+                .grid(mockGrid)
+                .build();
+        mockGrid.setObstacles(Collections.singletonList(obstacle));
         when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
         when(probeRepository.save(any(Probe.class))).thenAnswer(invocation -> {
             return invocation.getArgument(0);
@@ -99,6 +107,7 @@ public class ProbeServiceTest {
         Probe probe = probeService.moveForward(mockProbe.getId());
         assertEquals(0, probe.getX());
         assertEquals(1, probe.getY());
+        assertEquals(1,probe.getVisitedCoordinates().size());
         verify(probeRepository, times(1)).save(probe);
     }
 
@@ -121,4 +130,23 @@ public class ProbeServiceTest {
         when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
         assertThrows(RuntimeException.class, () -> probeService.moveForward(mockProbe.getId()));
     }
+
+    @Test
+    void testMoveBackward_Success() {
+        Obstacle obstacle = Obstacle.builder()
+                .x(0)
+                .y(-2)
+                .grid(mockGrid)
+                .build();
+        mockGrid.setObstacles(Collections.singletonList(obstacle));
+        when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
+        when(probeRepository.save(any(Probe.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Probe probe = probeService.moveBackward(mockProbe.getId());
+
+        assertEquals(0, probe.getX());
+        assertEquals(-1, probe.getY());
+        assertEquals(1, probe.getVisitedCoordinates().size());
+        verify(probeRepository, times(1)).save(probe);
+    }
+
 }
