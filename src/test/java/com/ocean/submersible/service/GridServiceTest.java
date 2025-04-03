@@ -72,8 +72,9 @@ public class GridServiceTest {
     @Test
     void testAddObstacleOutsideGrid() {
         when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
-        assertThrows(RuntimeException.class, () ->
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () ->
                 gridService.addObstacle(1L, 11, 4)
         );
+        assertEquals("Obstacle not within grid boundaries", runtimeException.getMessage());
     }
 }
