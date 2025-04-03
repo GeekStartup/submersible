@@ -1,0 +1,312 @@
+{
+	"info": {
+		"_postman_id": "2a641999-e307-492c-8316-180d826522a9",
+		"name": "Maveric",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15175961"
+	},
+	"item": [
+		{
+			"name": "Natwest",
+			"item": [
+				{
+					"name": "Submersible",
+					"item": [
+						{
+							"name": "Get Grid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/grid/:gridId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"grid",
+										":gridId"
+									],
+									"variable": [
+										{
+											"key": "gridId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Grid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/grid/create?width=10&height=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"grid",
+										"create"
+									],
+									"query": [
+										{
+											"key": "width",
+											"value": "10"
+										},
+										{
+											"key": "height",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Obstacle",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/grid/:gridId/addObstacle?x=-1&y=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"grid",
+										":gridId",
+										"addObstacle"
+									],
+									"query": [
+										{
+											"key": "x",
+											"value": "-1"
+										},
+										{
+											"key": "y",
+											"value": "2"
+										}
+									],
+									"variable": [
+										{
+											"key": "gridId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Obstacles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/grid/:gridId/obstacles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"grid",
+										":gridId",
+										"obstacles"
+									],
+									"variable": [
+										{
+											"key": "gridId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Probe",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/probe/create?gridId=1&x=0&y=0&facingDirection=SOUTH",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"probe",
+										"create"
+									],
+									"query": [
+										{
+											"key": "gridId",
+											"value": "1"
+										},
+										{
+											"key": "x",
+											"value": "0"
+										},
+										{
+											"key": "y",
+											"value": "0"
+										},
+										{
+											"key": "facingDirection",
+											"value": "SOUTH"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Probe",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/probe/:probeId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"probe",
+										":probeId"
+									],
+									"variable": [
+										{
+											"key": "probeId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Move Forward",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/probe/:probeId/moveForward",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"probe",
+										":probeId",
+										"moveForward"
+									],
+									"variable": [
+										{
+											"key": "probeId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Move Backward",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/probe/:probeId/moveBackward",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"probe",
+										":probeId",
+										"moveBackward"
+									],
+									"variable": [
+										{
+											"key": "probeId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Turn Left",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/probe/:probeId/turnLeft",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"probe",
+										":probeId",
+										"turnLeft"
+									],
+									"variable": [
+										{
+											"key": "probeId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Turn Right",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/probe/:probeId/turnRight",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"probe",
+										":probeId",
+										"turnRight"
+									],
+									"variable": [
+										{
+											"key": "probeId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
