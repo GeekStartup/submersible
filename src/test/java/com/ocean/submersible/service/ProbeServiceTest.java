@@ -17,6 +17,7 @@ import java.util.Optional;
 import static com.ocean.submersible.enums.Direction.NORTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -67,4 +68,23 @@ public class ProbeServiceTest {
         verify(gridRepository, times(1)).findById(1L);
         verify(probeRepository, times(1)).save(any(Probe.class));
     }
+
+    @Test
+    void testGetProbe_ProbeFound() {
+        when(probeRepository.findById(1L)).thenReturn(Optional.of(mockProbe));
+        Probe probe = probeService.getProbe(1L);
+        assertNotNull(probe);
+        assertEquals(1L, probe.getId());
+        verify(probeRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetProbe_ProbeNotFound() {
+        when(probeRepository.findById(1L)).thenReturn(Optional.empty());
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> probeService.getProbe(1L));
+        assertEquals("Probe not found", exception.getMessage());
+        verify(probeRepository, times(1)).findById(1L);
+    }
+
 }
