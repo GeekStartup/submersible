@@ -74,7 +74,36 @@ public class ProbeService implements IProbeService {
 
     @Override
     public Probe moveBackward(Long probeId) {
-        return null;
+        Probe probe = getProbe(probeId);
+        int newX = probe.getX();
+        int newY = probe.getY();
+
+        switch (probe.getFacingDirection()) {
+            case NORTH:
+                newY--;
+                break;
+            case EAST:
+                newX--;
+                break;
+            case SOUTH:
+                newY++;
+                break;
+            case WEST:
+                newX++;
+                break;
+        }
+
+        if (!isValidMovement(probe.getGrid(), newX, newY)) {
+            throw new RuntimeException("Movement is not within grid boundaries");
+        }
+
+        if (isObstaclePresent(probe.getGrid(), newX, newY)) {
+            throw new RuntimeException("Movement not possible due to obstacles");
+        }
+        probe.setX(newX);
+        probe.setY(newY);
+        addVisitedCoordinate(probe);
+        return probeRepository.save(probe);
     }
 
     @Override
