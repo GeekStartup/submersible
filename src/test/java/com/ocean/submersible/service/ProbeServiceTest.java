@@ -87,4 +87,19 @@ public class ProbeServiceTest {
         verify(probeRepository, times(1)).findById(1L);
     }
 
+    @Test
+    void testMoveForward_Success() {
+        when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
+        when(probeRepository.save(any(Probe.class))).thenAnswer(invocation -> {
+            Probe probeToSave = invocation.getArgument(0);
+            probeToSave.setX(0);
+            probeToSave.setY(1);
+            return probeToSave;
+        });
+
+        Probe probe = probeService.moveForward(mockProbe.getId());
+        assertEquals(0, probe.getX());
+        assertEquals(1, probe.getY());
+        verify(probeRepository, times(1)).save(probe);
+    }
 }
