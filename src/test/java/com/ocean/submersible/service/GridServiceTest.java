@@ -72,13 +72,6 @@ public class GridServiceTest {
     @Test
     void testAddObstacleOutsideGrid() {
         when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
-        Obstacle obstacle = Obstacle.builder()
-                .id(1L)
-                .x(11)
-                .y(4)
-                .grid(mockGrid)
-                .build();
-        when(obstacleRepository.save(any(Obstacle.class))).thenReturn(obstacle);
         assertThrows(RuntimeException.class, () ->
                 gridService.addObstacle(1L, 11, 4)
         );
