@@ -28,7 +28,14 @@ public class GridService implements IGridService {
 
     @Override
     public Obstacle addObstacle(Long gridId, int x, int y) {
-        return null;
+        Grid grid = gridRepository.findById(gridId)
+                .orElseThrow(() -> new RuntimeException("Grid not found"));
+        Obstacle obstacle = Obstacle.builder()
+                .x(x)
+                .y(y)
+                .grid(grid)
+                .build();
+        return obstacleRepository.save(obstacle);
     }
 
 
