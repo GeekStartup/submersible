@@ -57,6 +57,11 @@ public class ProbeService implements IProbeService {
                 newX--;
                 break;
         }
+
+        if (!isValidMovement(probe.getGrid(), newX, newY)) {
+            throw new RuntimeException("Movement is not within grid boundaries");
+        }
+
         probe.setX(newX);
         probe.setY(newY);
         return probeRepository.save(probe);
@@ -75,6 +80,18 @@ public class ProbeService implements IProbeService {
     @Override
     public Probe turnRight(Long probeId) {
         return null;
+    }
+
+    private boolean isValidMovement(Grid grid, int x, int y) {
+        int width = grid.getWidth();
+        int height = grid.getHeight();
+
+        int maxX = width / 2;
+        int minX = -maxX;
+        int maxY = height / 2;
+        int minY = -maxY;
+
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
 
