@@ -3,6 +3,7 @@ package com.ocean.submersible.service;
 import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Obstacle;
 import com.ocean.submersible.entities.Probe;
+import com.ocean.submersible.enums.Direction;
 import com.ocean.submersible.repositories.GridRepository;
 import com.ocean.submersible.repositories.ProbeRepository;
 import com.ocean.submersible.service.impl.ProbeService;
@@ -148,5 +149,16 @@ public class ProbeServiceTest {
         assertEquals(1, probe.getVisitedCoordinates().size());
         verify(probeRepository, times(1)).save(probe);
     }
+
+    @Test
+    void testTurnLeft_Success() {
+        when(probeRepository.findById(mockProbe.getId())).thenReturn(Optional.of(mockProbe));
+        when(probeRepository.save(any(Probe.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Probe probe = probeService.turnLeft(mockProbe.getId());
+        assertEquals(Direction.WEST, probe.getFacingDirection());
+        verify(probeRepository, times(1)).save(probe);
+    }
+
 
 }
