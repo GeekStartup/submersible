@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class) // Automatically initializes mocks
+@ExtendWith(MockitoExtension.class)
 public class GridServiceTest {
 
     @Mock
@@ -60,6 +60,7 @@ public class GridServiceTest {
         assertNotNull(createdGrid);
         assertEquals(10, createdGrid.getWidth());
         assertEquals(10, createdGrid.getHeight());
+        verify(gridRepository, times(1)).save(any(Grid.class));
     }
 
     @Test
@@ -70,6 +71,8 @@ public class GridServiceTest {
         assertNotNull(createdObstacle);
         assertEquals(3, createdObstacle.getX());
         assertEquals(4, createdObstacle.getY());
+        verify(gridRepository).findById(1L);
+        verify(obstacleRepository,times(1)).save(any(Obstacle.class));
     }
 
     @Test
