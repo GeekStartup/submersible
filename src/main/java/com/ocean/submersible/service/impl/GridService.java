@@ -30,6 +30,19 @@ public class GridService implements IGridService {
     public Obstacle addObstacle(Long gridId, int x, int y) {
         Grid grid = gridRepository.findById(gridId)
                 .orElseThrow(() -> new RuntimeException("Grid not found"));
+
+        int width = grid.getWidth();
+        int height = grid.getHeight();
+
+        int maxX = width / 2;
+        int minX = -maxX;
+        int maxY = height / 2;
+        int minY = -maxY;
+
+        if (!(x >= minX && x <= maxX && y >= minY && y <= maxY)) {
+            throw new RuntimeException("Obstacle not within grid boundaries");
+        }
+
         Obstacle obstacle = Obstacle.builder()
                 .x(x)
                 .y(y)
