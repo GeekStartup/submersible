@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) // Automatically initializes mocks
@@ -84,6 +86,18 @@ public class GridServiceTest {
         when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
         mockGrid.setObstacles(Collections.singletonList(mockObstacle));
         assertEquals(1, gridService.getObstacles(1L).size());
+    }
+
+    @Test
+    void testGetGrid() {
+        when(gridRepository.findById(1L)).thenReturn(Optional.of(mockGrid));
+        Grid grid = gridService.getGrid(1L);
+        assertNotNull(grid);
+        assertEquals(1L, grid.getId());
+        assertEquals(10, grid.getWidth());
+        assertEquals(10, grid.getHeight());
+        verify(gridRepository).findById(1L);
+        verify(gridRepository,times(1)).findById(1L);
     }
 }
 
