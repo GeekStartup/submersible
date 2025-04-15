@@ -2,30 +2,32 @@ package com.ocean.submersible.service.impl;
 
 import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Obstacle;
-import com.ocean.submersible.repositories.GridRepository;
-import com.ocean.submersible.repositories.ObstacleRepository;
 import com.ocean.submersible.service.IGridService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Profile("!local")
-public class GridService implements IGridService {
+@Profile("local")
+public class InMemoryGridService implements IGridService {
 
-    private final GridRepository gridRepository;
-    private final ObstacleRepository obstacleRepository;
+    private final Map<Long, Grid> gridMap = new HashMap<>();
+    private Long gridId = 0L;
+    private Long obstacleId = 0L;
 
     @Override
     public Grid createGrid(int width, int height) {
         Grid grid = Grid.builder()
+                .id(gridId++)
                 .height(height)
                 .width(width)
                 .build();
-        return gridRepository.save(grid);
+        return gridMap.put(gridId, grid);
     }
 
     @Override
@@ -38,11 +40,13 @@ public class GridService implements IGridService {
         }
 
         Obstacle obstacle = Obstacle.builder()
+                .id(obstacleId++)
                 .x(x)
                 .y(y)
                 .grid(grid)
                 .build();
-        return obstacleRepository.save(obstacle);
+        grid.getObstacles().add(obstacle);
+        return obstacle;
     }
 
 
@@ -53,14 +57,14 @@ public class GridService implements IGridService {
     }
 
     @Override
-    public Grid updateGrid(Grid updatedGrid) {
-        return null;
+    public Grid getGrid(Long gridId) {
+        return gridMap.get(gridId);
     }
 
     @Override
-    public Grid getGrid(Long gridId) {
-        return gridRepository.findById(gridId)
-                .orElseThrow(() -> new RuntimeException("Grid not found"));
+    public Grid updateGrid(Grid updatedGrid) {
+        gridMap.replace(updatedGrid.getId(), updatedGrid);
+        return updatedGrid;
     }
 
     private boolean isValidObstacle(Grid grid, int x, int y) {

@@ -2,7 +2,7 @@ package com.ocean.submersible.controller;
 
 import com.ocean.submersible.entities.Probe;
 import com.ocean.submersible.enums.Direction;
-import com.ocean.submersible.service.impl.ProbeService;
+import com.ocean.submersible.service.IProbeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProbeController {
 
-    private final ProbeService probeService;
+    private final IProbeService probeService;
 
     @PostMapping("/create")
     public Probe createProbe(@RequestParam Long gridId, @RequestParam int x, @RequestParam int y, @RequestParam Direction facingDirection) {

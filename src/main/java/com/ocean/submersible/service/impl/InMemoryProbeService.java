@@ -3,40 +3,43 @@ package com.ocean.submersible.service.impl;
 import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Probe;
 import com.ocean.submersible.enums.Direction;
-import com.ocean.submersible.repositories.GridRepository;
-import com.ocean.submersible.repositories.ProbeRepository;
+import com.ocean.submersible.service.IGridService;
 import com.ocean.submersible.service.IProbeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
 @RequiredArgsConstructor
-@Profile("!local")
-public class ProbeService implements IProbeService {
+@Profile("local")
+public class InMemoryProbeService implements IProbeService {
 
-    private final ProbeRepository probeRepository;
-    private final GridRepository gridRepository;
+    private final Map<Long, Probe> probeMap = new HashMap<>();
+    private final IGridService gridService;
+    private Long probeId = 0L;
 
     @Override
     public Probe createProbe(Long gridId, int x, int y, Direction facingDirection) {
-        Grid grid = gridRepository.findById(gridId)
-                .orElseThrow(() -> new RuntimeException("Grid not found"));
+        Grid grid = gridService.getGrid(gridId);
         Probe probe = Probe.builder()
+                .id(probeId++)
                 .x(x)
                 .y(y)
                 .facingDirection(facingDirection)
                 .grid(grid)
                 .build();
         grid.setProbe(probe);
-        return probeRepository.save(probe);
+        gridService.updateGrid(grid);
+        return probeMap.put(probeId, probe);
     }
 
     @Override
     public Probe getProbe(Long probeId) {
-        return probeRepository.findById(probeId)
-                .orElseThrow(() -> new RuntimeException("Probe not found"));
+        return probeMap.get(probeId);
     }
 
     @Override
@@ -71,7 +74,12 @@ public class ProbeService implements IProbeService {
         probe.setX(newX);
         probe.setY(newY);
         addVisitedCoordinate(probe);
-        return probeRepository.save(probe);
+        probeMap.replace(probe.getId(), probe);
+
+        Grid grid = probe.getGrid();
+        grid.setProbe(probe);
+        gridService.updateGrid(grid);
+        return probe;
     }
 
     @Override
@@ -104,8 +112,12 @@ public class ProbeService implements IProbeService {
         }
         probe.setX(newX);
         probe.setY(newY);
-        addVisitedCoordinate(probe);
-        return probeRepository.save(probe);
+        probeMap.replace(probe.getId(), probe);
+
+        Grid grid = probe.getGrid();
+        grid.setProbe(probe);
+        gridService.updateGrid(grid);
+        return probe;
     }
 
     @Override
@@ -125,7 +137,12 @@ public class ProbeService implements IProbeService {
                 probe.setFacingDirection(Direction.SOUTH);
                 break;
         }
-        return probeRepository.save(probe);
+        probeMap.replace(probe.getId(), probe);
+
+        Grid grid = probe.getGrid();
+        grid.setProbe(probe);
+        gridService.updateGrid(grid);
+        return probe;
     }
 
     @Override
@@ -145,7 +162,12 @@ public class ProbeService implements IProbeService {
                 probe.setFacingDirection(Direction.NORTH);
                 break;
         }
-        return probeRepository.save(probe);
+        probeMap.replace(probe.getId(), probe);
+
+        Grid grid = probe.getGrid();
+        grid.setProbe(probe);
+        gridService.updateGrid(grid);
+        return probe;
     }
 
     private boolean isValidMovement(Grid grid, int x, int y) {
