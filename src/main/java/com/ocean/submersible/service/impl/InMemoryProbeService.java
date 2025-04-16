@@ -9,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -20,13 +23,14 @@ public class InMemoryProbeService implements IProbeService {
 
     private final Map<Long, Probe> probeMap = new HashMap<>();
     private final IGridService gridService;
-    private Long probeId = 0L;
+    private final List<String> visitedCoordinates = new ArrayList<>();
+    private Long probeId = 1L;
 
     @Override
     public Probe createProbe(Long gridId, int x, int y, Direction facingDirection) {
         Grid grid = gridService.getGrid(gridId);
         Probe probe = Probe.builder()
-                .id(probeId++)
+                .id(probeId)
                 .x(x)
                 .y(y)
                 .facingDirection(facingDirection)
@@ -34,12 +38,15 @@ public class InMemoryProbeService implements IProbeService {
                 .build();
         grid.setProbe(probe);
         gridService.updateGrid(grid);
-        return probeMap.put(probeId, probe);
+        probeMap.put(probeId, probe);
+        probeId++;
+        return probe;
     }
 
     @Override
     public Probe getProbe(Long probeId) {
-        return probeMap.get(probeId);
+        return Optional.ofNullable(probeMap.get(probeId))
+                .orElseThrow(() -> new RuntimeException("Probe not found"));
     }
 
     @Override
@@ -188,7 +195,8 @@ public class InMemoryProbeService implements IProbeService {
     }
 
     private void addVisitedCoordinate(Probe probe) {
-        probe.getVisitedCoordinates().add(probe.getX() + "," + probe.getY());
+        visitedCoordinates.add(probe.getX() + "," + probe.getY());
+        probe.setVisitedCoordinates(visitedCoordinates);
     }
 
 

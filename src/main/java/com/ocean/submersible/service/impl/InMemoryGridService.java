@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,17 +19,20 @@ import java.util.Map;
 public class InMemoryGridService implements IGridService {
 
     private final Map<Long, Grid> gridMap = new HashMap<>();
-    private Long gridId = 0L;
-    private Long obstacleId = 0L;
+    private final List<Obstacle> obstacles = new ArrayList<>();
+    private Long gridId = 1L;
+    private Long obstacleId = 1L;
 
     @Override
     public Grid createGrid(int width, int height) {
         Grid grid = Grid.builder()
-                .id(gridId++)
+                .id(gridId)
                 .height(height)
                 .width(width)
                 .build();
-        return gridMap.put(gridId, grid);
+        gridMap.put(gridId, grid);
+        gridId++;
+        return grid;
     }
 
     @Override
@@ -40,12 +45,15 @@ public class InMemoryGridService implements IGridService {
         }
 
         Obstacle obstacle = Obstacle.builder()
-                .id(obstacleId++)
+                .id(obstacleId)
                 .x(x)
                 .y(y)
                 .grid(grid)
                 .build();
-        grid.getObstacles().add(obstacle);
+        obstacles.add(obstacle);
+        grid.setObstacles(obstacles);
+        gridMap.replace(grid.getId(), grid);
+        obstacleId++;
         return obstacle;
     }
 
@@ -58,7 +66,8 @@ public class InMemoryGridService implements IGridService {
 
     @Override
     public Grid getGrid(Long gridId) {
-        return gridMap.get(gridId);
+        return Optional.ofNullable(gridMap.get(gridId))
+                .orElseThrow(() -> new RuntimeException("Grid not found"));
     }
 
     @Override
