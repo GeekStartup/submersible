@@ -15,4 +15,6 @@ public interface IGridService {
     Grid getGrid(Long gridId);
 
     List<Obstacle> getObstacles(Long gridId);
+
+    Grid updateGrid(Grid updatedGrid);
 }

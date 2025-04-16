@@ -3,7 +3,7 @@ package com.ocean.submersible.controller;
 
 import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Obstacle;
-import com.ocean.submersible.service.impl.GridService;
+import com.ocean.submersible.service.IGridService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/grid")
 public class GridController {
 
-    private final GridService gridService;
+    private final IGridService gridService;
 
     @PostMapping("/create")
     public Grid createGrid(@RequestParam int width, @RequestParam int height) {

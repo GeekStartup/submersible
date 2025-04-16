@@ -6,12 +6,14 @@ import com.ocean.submersible.repositories.GridRepository;
 import com.ocean.submersible.repositories.ObstacleRepository;
 import com.ocean.submersible.service.IGridService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Profile("!local")
 public class GridService implements IGridService {
 
     private final GridRepository gridRepository;
@@ -48,6 +50,11 @@ public class GridService implements IGridService {
     public List<Obstacle> getObstacles(Long gridId) {
         Grid grid = getGrid(gridId);
         return grid.getObstacles();
+    }
+
+    @Override
+    public Grid updateGrid(Grid updatedGrid) {
+        return null;
     }
 
     @Override
