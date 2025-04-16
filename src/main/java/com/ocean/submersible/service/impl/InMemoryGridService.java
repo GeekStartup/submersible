@@ -2,16 +2,21 @@ package com.ocean.submersible.service.impl;
 
 import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Obstacle;
+import com.ocean.submersible.exception.SubmersibleException;
 import com.ocean.submersible.service.IGridService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.ocean.submersible.exception.ErrorCode.GRID_NOT_FOUND;
+import static com.ocean.submersible.exception.ErrorCode.OBSTACLE_OUTSIDE_GRID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +46,7 @@ public class InMemoryGridService implements IGridService {
 
         boolean validObstacle = isValidObstacle(grid, x, y);
         if (!validObstacle) {
-            throw new RuntimeException("Obstacle not within grid boundaries");
+            throw new SubmersibleException(OBSTACLE_OUTSIDE_GRID);
         }
 
         Obstacle obstacle = Obstacle.builder()
@@ -67,7 +72,10 @@ public class InMemoryGridService implements IGridService {
     @Override
     public Grid getGrid(Long gridId) {
         return Optional.ofNullable(gridMap.get(gridId))
-                .orElseThrow(() -> new RuntimeException("Grid not found"));
+                .orElseThrow(() -> SubmersibleException.builder()
+                        .errorCode(GRID_NOT_FOUND)
+                        .details(Collections.singletonMap("reason", String.format("Grid with ID %d not found", gridId)))
+                        .build());
     }
 
     @Override

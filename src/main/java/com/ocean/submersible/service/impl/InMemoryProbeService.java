@@ -3,6 +3,7 @@ package com.ocean.submersible.service.impl;
 import com.ocean.submersible.entities.Grid;
 import com.ocean.submersible.entities.Probe;
 import com.ocean.submersible.enums.Direction;
+import com.ocean.submersible.exception.SubmersibleException;
 import com.ocean.submersible.service.IGridService;
 import com.ocean.submersible.service.IProbeService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.ocean.submersible.exception.ErrorCode.PROBE_MOVEMENT_OUTSIDE_GRID;
+import static com.ocean.submersible.exception.ErrorCode.PROBE_NOT_FOUND;
+import static com.ocean.submersible.exception.ErrorCode.PROBE_OBSTACLE_COLLISION;
 
 
 @Service
@@ -46,7 +51,7 @@ public class InMemoryProbeService implements IProbeService {
     @Override
     public Probe getProbe(Long probeId) {
         return Optional.ofNullable(probeMap.get(probeId))
-                .orElseThrow(() -> new RuntimeException("Probe not found"));
+                .orElseThrow(() -> new SubmersibleException(PROBE_NOT_FOUND));
     }
 
     @Override
@@ -71,11 +76,11 @@ public class InMemoryProbeService implements IProbeService {
         }
 
         if (!isValidMovement(probe.getGrid(), newX, newY)) {
-            throw new RuntimeException("Movement is not within grid boundaries");
+            throw new SubmersibleException(PROBE_MOVEMENT_OUTSIDE_GRID);
         }
 
         if (isObstaclePresent(probe.getGrid(), newX, newY)) {
-            throw new RuntimeException("Movement not possible due to obstacles");
+            throw new SubmersibleException(PROBE_OBSTACLE_COLLISION);
         }
 
         probe.setX(newX);
